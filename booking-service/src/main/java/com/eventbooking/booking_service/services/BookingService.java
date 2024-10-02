@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class BookingService {
 
     private final BookingRepository bookingRepository;
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
 
     public List<BookingDto> getAllBookings(){
         List<Booking> bookings = bookingRepository.findAll();
@@ -55,8 +55,8 @@ public class BookingService {
         //Call event service, and book if the event exist
         Long eventId = bookingDto.getEventId();
 
-        EventDto eventResponse = webClient.get()
-                .uri("http://localhost:8081/api/events/{eventId}", eventId)
+        EventDto eventResponse = webClientBuilder.build().get()
+                .uri("http://event-service/api/events/{eventId}", eventId)
                 .retrieve()
                 .bodyToMono(EventDto.class)
                 .block();
