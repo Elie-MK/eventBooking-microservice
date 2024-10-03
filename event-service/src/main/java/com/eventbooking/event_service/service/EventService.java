@@ -26,8 +26,8 @@ public class EventService {
                 .build();
 
         log.info("Creating event with id : {}", event.getId());
-        Event event1 = eventRepository.save(event);
-        return mapToDto(event1);
+        Event newEvent = eventRepository.save(event);
+        return mapToDto(newEvent);
     }
 
     public List<EventDto> getAllEvents() {
@@ -41,6 +41,27 @@ public class EventService {
         Event event = eventRepository.findById(id).orElse(null);
         if (event != null) {
             return Optional.of(mapToDto(event));
+        }
+        return Optional.empty();
+    }
+
+    public String deleteEventById(Long eventId) {
+        Event event = eventRepository.findById(eventId).orElse(null);
+        if (event != null) {
+            eventRepository.deleteById(event.getId());
+            return "Event with id " + eventId + " was deleted";
+        }
+        return "Event with id " + eventId + " not found";
+    }
+
+    public Optional<EventDto> updateEvent(Long eventId, EventDto eventDto) {
+        Event event = eventRepository.findById(eventId).orElse(null);
+        if (event != null) {
+            event.setName(eventDto.getName());
+            event.setDate(eventDto.getDate());
+            event.setLocation(eventDto.getLocation());
+            Event newEvent = eventRepository.save(event);
+            return Optional.of(mapToDto(newEvent));
         }
         return Optional.empty();
     }

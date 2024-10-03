@@ -31,6 +31,14 @@ public class EventController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.FOUND)
+    public ResponseEntity<List<EventDto>> getAllEvents() {
+        log.debug("Request to get all events");
+        var result = eventService.getAllEvents();
+        return ResponseEntity.ok(result);
+    }
+
     /**
      * Request to create a new event
      *
@@ -45,11 +53,19 @@ public class EventController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.FOUND)
-    public ResponseEntity<List<EventDto>> getAllEvents() {
-        log.debug("Request to get all events");
-        var result = eventService.getAllEvents();
+    @PutMapping("/{eventId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Optional<EventDto>> updateEvent(@PathVariable Long eventId, @RequestBody EventDto event) {
+        log.debug("Request to update an event with id: {}", eventId);
+        var result = eventService.updateEvent(eventId, event);
+        return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping("/{eventId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<String> deleteEvent(@PathVariable Long eventId) {
+        log.debug("Request to delete an event with id: {}", eventId);
+        var result = eventService.deleteEventById(eventId);
         return ResponseEntity.ok(result);
     }
 
