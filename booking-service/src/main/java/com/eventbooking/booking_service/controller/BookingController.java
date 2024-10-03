@@ -22,9 +22,9 @@ public class BookingController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Optional<BookingDto>> getBookingById(@PathVariable Long id) {
-        var result = bookingService.getBookingById(id);
+    @GetMapping("/{bookingId}")
+    public ResponseEntity<Optional<BookingDto>> getBookingById(@PathVariable Long bookingId) {
+        var result = bookingService.getBookingById(bookingId);
         return ResponseEntity.ok(result);
     }
 

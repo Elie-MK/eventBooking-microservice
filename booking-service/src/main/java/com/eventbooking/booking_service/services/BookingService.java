@@ -29,8 +29,8 @@ public class BookingService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<BookingDto> getBookingById(long id){
-        Optional<Booking> booking = bookingRepository.findById(id);
+    public Optional<BookingDto> getBookingById(long bookingId){
+        Optional<Booking> booking = bookingRepository.findById(bookingId);
         if (booking.isEmpty()) return Optional.empty();
         return booking.map(value -> BookingDto.builder()
                 .id(value.getId())
@@ -68,12 +68,12 @@ public class BookingService {
         booking.setBookingTime(LocalDateTime.now());
         booking.setCancelled(false);
 
-        if (eventResponse != null){
-            Booking bookingEvent = bookingRepository.save(booking);
-            return mapToDto(bookingEvent);
-        } else {
+        if (eventResponse == null){
             throw new IllegalArgumentException("There no event with Id {}" + bookingDto.getEventId());
         }
+
+        Booking bookingEvent = bookingRepository.save(booking);
+        return mapToDto(bookingEvent);
     }
 
     public BookingDto cancelBooking(long id){
