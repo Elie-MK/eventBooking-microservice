@@ -29,6 +29,10 @@ public class EventDto {
      */
     private LocalDate date;
 
+    /**
+     * The available tickets for each event
+     */
+    private Integer ticketsAvailable;
 
     /**
      * The date when the event is created

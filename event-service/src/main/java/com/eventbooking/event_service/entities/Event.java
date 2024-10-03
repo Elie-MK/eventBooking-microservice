@@ -50,6 +50,13 @@ public class Event {
     private LocalDate date;
 
     /**
+     * The available tickets for each event
+     */
+    @NotNull
+    @Column(name = "tickets_available", nullable = false)
+    private Integer ticketsAvailable;
+
+    /**
      * The date when the event is created
      */
     @Column(name = "createdAt")
