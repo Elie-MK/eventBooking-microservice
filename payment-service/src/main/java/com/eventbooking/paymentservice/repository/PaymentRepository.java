@@ -1,6 +1,6 @@
-package com.eventbooking.payment_service.repository;
+package com.eventbooking.paymentservice.repository;
 
-import com.eventbooking.payment_service.entities.Payment;
+import com.eventbooking.paymentservice.entities.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

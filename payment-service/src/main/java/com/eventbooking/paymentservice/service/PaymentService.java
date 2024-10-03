@@ -1,11 +1,11 @@
-package com.eventbooking.payment_service.service;
+package com.eventbooking.paymentservice.service;
 
-import com.eventbooking.payment_service.constants.PaymentStatus;
-import com.eventbooking.payment_service.dto.BookingDto;
-import com.eventbooking.payment_service.dto.PaymentDto;
-import com.eventbooking.payment_service.entities.Payment;
-import com.eventbooking.payment_service.event.PaymentEvent;
-import com.eventbooking.payment_service.repository.PaymentRepository;
+import com.eventbooking.paymentservice.constants.PaymentStatus;
+import com.eventbooking.paymentservice.dto.BookingDto;
+import com.eventbooking.paymentservice.dto.PaymentDto;
+import com.eventbooking.paymentservice.entities.Payment;
+import com.eventbooking.paymentservice.event.PaymentEvent;
+import com.eventbooking.paymentservice.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -61,8 +61,12 @@ public class PaymentService {
                 .userName("John")
                 .eventDate(LocalDate.ofEpochDay(2024 - 10 - 2023)).build();
 
-        kafkaTemplate.send("notification", paymentEvent);
+        sendPaymentEvent(paymentEvent);
         return mapToDto(savedPayment);
+    }
+
+    public void sendPaymentEvent(PaymentEvent paymentEvent) {
+        kafkaTemplate.send("notification", paymentEvent);
     }
 
     private PaymentDto mapToDto(Payment savedPayment) {

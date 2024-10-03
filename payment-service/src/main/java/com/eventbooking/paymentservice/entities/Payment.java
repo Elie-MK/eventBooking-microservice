@@ -1,6 +1,6 @@
-package com.eventbooking.payment_service.entities;
+package com.eventbooking.paymentservice.entities;
 
-import com.eventbooking.payment_service.constants.PaymentStatus;
+import com.eventbooking.paymentservice.constants.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

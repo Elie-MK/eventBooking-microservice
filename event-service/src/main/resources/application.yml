@@ -13,6 +13,7 @@ spring:
     hibernate:
       ddl-auto: update
 
+#eureka
 eureka:
   client:
     service-url:
@@ -24,3 +25,5 @@ server:
 springdoc:
   api-docs:
     path: /api-docs
+
+#kafka properties

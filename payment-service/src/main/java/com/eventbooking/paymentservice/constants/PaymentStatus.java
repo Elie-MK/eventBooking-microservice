@@ -1,4 +1,4 @@
-package com.eventbooking.payment_service.constants;
+package com.eventbooking.paymentservice.constants;
 
 public enum PaymentStatus {
     PAYMENT_APPROVED,

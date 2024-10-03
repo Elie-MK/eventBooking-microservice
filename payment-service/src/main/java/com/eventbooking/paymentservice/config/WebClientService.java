@@ -1,4 +1,4 @@
-package com.eventbooking.payment_service.config;
+package com.eventbooking.paymentservice.config;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;

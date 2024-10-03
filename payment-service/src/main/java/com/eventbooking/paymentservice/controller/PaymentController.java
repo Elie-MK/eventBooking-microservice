@@ -1,7 +1,7 @@
-package com.eventbooking.payment_service.controller;
+package com.eventbooking.paymentservice.controller;
 
-import com.eventbooking.payment_service.dto.PaymentDto;
-import com.eventbooking.payment_service.service.PaymentService;
+import com.eventbooking.paymentservice.dto.PaymentDto;
+import com.eventbooking.paymentservice.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
