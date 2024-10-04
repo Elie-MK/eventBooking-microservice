@@ -20,8 +20,8 @@ public class NotificationServiceApplication {
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            PaymentEvent event = objectMapper.readValue(message, PaymentEvent.class);
-            log.info("Converted to PaymentEvent: {}", event);
+            BookingEvent bookingEvent = objectMapper.readValue(message, BookingEvent.class);
+            log.info("Converted to PaymentEvent: {}", bookingEvent);
             // Process the PaymentEvent
         } catch (JsonProcessingException e) {
             log.error("Failed to deserialize message to PaymentEvent: {}", e.getMessage());

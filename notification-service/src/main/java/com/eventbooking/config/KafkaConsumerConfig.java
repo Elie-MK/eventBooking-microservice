@@ -1,6 +1,6 @@
 package com.eventbooking.config;
 
-import com.eventbooking.PaymentEvent;
+import com.eventbooking.BookingEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -16,14 +16,14 @@ import java.util.Map;
 public class KafkaConsumerConfig {
 
     @Bean
-    public ConsumerFactory<String, PaymentEvent> consumerFactory() {
+    public ConsumerFactory<String, BookingEvent> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "notificationId");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 
         // The VALUE_DESERIALIZER_CLASS_CONFIG is not needed in props anymore
-        JsonDeserializer<PaymentEvent> deserializer = new JsonDeserializer<>(PaymentEvent.class);
+        JsonDeserializer<BookingEvent> deserializer = new JsonDeserializer<>(BookingEvent.class);
         deserializer.addTrustedPackages("*"); // Allow all packages to be deserialized
 
         return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), deserializer);
