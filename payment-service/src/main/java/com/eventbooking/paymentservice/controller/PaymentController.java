@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/payment")
@@ -16,15 +16,31 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     /**
+     * Retrieve a list of all payments.
+     * <p>
+     * This method handles the HTTP GET request to fetch all payments.
+     * It calls the PaymentService to retrieve a list of PaymentDto objects,
+     * which represent the payment records. </p>
+     *
+     * @return a ResponseEntity containing a list of PaymentDto and an HTTP 200 OK status
+     */
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<PaymentDto>> getAllPayments(){
+        var result = paymentService.getAllPayments();
+        return ResponseEntity.ok(result);
+    }
+
+    /**
      * Retrieves payment information for a specific booking.
      *
      * @param bookingId The ID of the booking for which payment details are requested.
      * @return A ResponseEntity containing an Optional of PaymentDto,
      *         wrapped in an OK response status.
      */
-    @GetMapping("/booking/{bookingId}")
+    @GetMapping("/booking")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Optional<PaymentDto>> getPaymentBooking(@PathVariable() Long bookingId) {
+    public ResponseEntity<List<PaymentDto>> getPaymentBooking(@RequestParam() Long bookingId) {
         var result = paymentService.getPaymentByBookingId(bookingId);
         return ResponseEntity.ok(result);
     }

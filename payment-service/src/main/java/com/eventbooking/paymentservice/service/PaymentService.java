@@ -4,13 +4,16 @@ import com.eventbooking.paymentservice.constants.PaymentStatus;
 import com.eventbooking.paymentservice.dto.BookingDto;
 import com.eventbooking.paymentservice.dto.PaymentDto;
 import com.eventbooking.paymentservice.entities.Payment;
+import com.eventbooking.paymentservice.exceptionhandler.BookingIsCancelledException;
+import com.eventbooking.paymentservice.exceptionhandler.NotFoundException;
 import com.eventbooking.paymentservice.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,21 +22,32 @@ public class PaymentService {
     private final WebClient.Builder webClientBuilder;
 
     /**
+     * Retrieve a list of all payments.
+     *
+     * This method fetches all the payment records from the database,
+     * maps each payment entity to a PaymentDto object, and returns a list of them.
+     *
+     * @return a List of PaymentDto representing all payments in the system
+     */
+    public List<PaymentDto> getAllPayments(){
+        List<Payment> payments = paymentRepository.findAll();
+        return payments.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Retrieves payment details associated with a given booking ID.
      *
      * @param bookingId The ID of the booking for which payment details are requested.
      * @return An Optional containing the PaymentDto if payment exists, or empty if no payment is found.
      */
-    public Optional<PaymentDto> getPaymentByBookingId(Long bookingId) {
-        Payment payment = paymentRepository.findByBookingId(bookingId);
-        PaymentDto paymentDto = PaymentDto.builder()
-                .id(payment.getId())
-                .bookingId(payment.getBookingId())
-                .amount(payment.getAmount())
-                .paymentDate(LocalDateTime.now())
-                .paymentStatus(null)
-                .build();
-        return Optional.ofNullable(paymentDto);
+    public List<PaymentDto> getPaymentByBookingId(Long bookingId) {
+       List<Payment> payment = paymentRepository.findByBookingId(bookingId);
+
+        return payment.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -47,20 +61,24 @@ public class PaymentService {
     public PaymentDto processPayment(PaymentDto paymentDto) {
         Long bookingId = paymentDto.getBookingId();
         BookingDto bookingResponse = webClientBuilder.build().get()
-                .uri("http://booking-service/api/bookings/{bookingId}", bookingId)
+                .uri("http://booking-service/api/booking/{bookingId}", bookingId)
                 .retrieve()
                 .bodyToMono(BookingDto.class)
                 .block();
         if (bookingResponse == null) {
-            throw new RuntimeException("Booking not found. Cannot process payment");
+            throw new NotFoundException("Booking not found with id: " + bookingId + " . Cannot process payment");
+        }
+
+        if(bookingResponse.isCancelled()){
+            throw  new BookingIsCancelledException("Booking with id " + bookingId + " is cancelled. Cannot process payment." );
         }
 
         Payment payment = Payment.builder()
                 .id(paymentDto.getId())
                 .bookingId(paymentDto.getBookingId())
-                .amount(paymentDto.getAmount())
+                .amount(bookingResponse.getTotalAmount().doubleValue())
                 .paymentDate(LocalDateTime.now())
-                .paymentStatus(PaymentStatus.PENDING)
+                .paymentStatus(PaymentStatus.PAYMENT_PENDING)
                 .build();
         Payment savedPayment = paymentRepository.save(payment);
         return mapToDto(savedPayment);
@@ -78,7 +96,8 @@ public class PaymentService {
                 .bookingId(savedPayment.getBookingId())
                 .amount(savedPayment.getAmount())
                 .paymentDate(LocalDateTime.now())
-                .paymentStatus(PaymentStatus.PENDING.name())
+                .paymentStatus(savedPayment.getPaymentStatus().name())
                 .build();
     }
+
 }
