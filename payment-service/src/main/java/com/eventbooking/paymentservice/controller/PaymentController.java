@@ -23,7 +23,7 @@ public class PaymentController {
      *         wrapped in an OK response status.
      */
     @GetMapping("/booking/{bookingId}")
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Optional<PaymentDto>> getPaymentBooking(@PathVariable() Long bookingId) {
         var result = paymentService.getPaymentByBookingId(bookingId);
         return ResponseEntity.ok(result);

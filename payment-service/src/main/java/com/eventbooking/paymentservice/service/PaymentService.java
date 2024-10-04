@@ -4,14 +4,11 @@ import com.eventbooking.paymentservice.constants.PaymentStatus;
 import com.eventbooking.paymentservice.dto.BookingDto;
 import com.eventbooking.paymentservice.dto.PaymentDto;
 import com.eventbooking.paymentservice.entities.Payment;
-import com.eventbooking.paymentservice.event.PaymentEvent;
 import com.eventbooking.paymentservice.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -81,7 +78,7 @@ public class PaymentService {
                 .bookingId(savedPayment.getBookingId())
                 .amount(savedPayment.getAmount())
                 .paymentDate(LocalDateTime.now())
-                .paymentStatus(PaymentStatus.PAYMENT_APPROVED.name())
+                .paymentStatus(PaymentStatus.PENDING.name())
                 .build();
     }
 }

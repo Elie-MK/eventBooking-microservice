@@ -2,6 +2,7 @@ package com.eventbooking.event_service.service;
 
 import com.eventbooking.event_service.dto.EventDto;
 import com.eventbooking.event_service.entities.Event;
+import com.eventbooking.event_service.exceptionshandler.NotFoundException;
 import com.eventbooking.event_service.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,10 +58,10 @@ public class EventService {
      */
     public Optional<EventDto> getEventById(Long id) {
         Event event = eventRepository.findById(id).orElse(null);
-        if (event != null) {
-            return Optional.of(mapToDto(event));
+        if (event == null) {
+            throw new NotFoundException("There no event with id : " + id);
         }
-        return Optional.empty();
+        return Optional.of(mapToDto(event));
     }
 
     /**
@@ -75,7 +76,7 @@ public class EventService {
             eventRepository.deleteById(event.getId());
             return "Event with id " + eventId + " was deleted";
         }
-        return "Event with id " + eventId + " not found";
+        throw new NotFoundException( "Event with id " + eventId + " not found");
     }
 
     /**

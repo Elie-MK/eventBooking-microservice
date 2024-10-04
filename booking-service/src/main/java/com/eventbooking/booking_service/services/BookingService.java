@@ -5,6 +5,7 @@ import com.eventbooking.booking_service.dto.EventDto;
 import com.eventbooking.booking_service.exceptionshandller.BookingAlreadyCancelledException;
 import com.eventbooking.booking_service.event.BookingEvent;
 import com.eventbooking.booking_service.exceptionshandller.BookingCancelledException;
+import com.eventbooking.booking_service.exceptionshandller.NotFoundException;
 import com.eventbooking.booking_service.repository.BookingRepository;
 import com.eventbooking.booking_service.dto.BookingDto;
 import com.eventbooking.booking_service.entities.Booking;
@@ -91,7 +92,7 @@ public class BookingService {
                 )).isCancelled(false)
                 .build();
         if (eventResponse == null) {
-            throw new IllegalArgumentException("There no event with Id {}" + bookingDto.getEventId());
+            throw new NotFoundException("There no event with Id {}" + bookingDto.getEventId());
         }
 
         Booking bookingEvent = bookingRepository.save(booking);
@@ -130,7 +131,7 @@ public class BookingService {
             }
             booking.setCancelled(true);
             return bookingRepository.save(booking);
-        }).orElseThrow(() -> new IllegalArgumentException("There no booking with Id {}" + id));
+        }).orElseThrow(() -> new NotFoundException("There no booking with Id {}" + id));
 
         EventDto eventResponse = webClientBuilder.build().get()
                 .uri("http://event-service/api/events/{eventId}", bookingEvent.getEventId())
@@ -139,7 +140,7 @@ public class BookingService {
                 .block();
 
         if (eventResponse == null) {
-            throw new IllegalArgumentException("There no event with id: " + bookingEvent.getEventId());
+            throw new NotFoundException("There no event with id: " + bookingEvent.getEventId());
         }
 
         BookingEvent newBookingEvent = BookingEvent.builder()
@@ -189,7 +190,7 @@ public class BookingService {
             case VIP -> BigDecimal.valueOf(150.00 * numberOfTicket);
             case REGULAR -> BigDecimal.valueOf(100.00 * numberOfTicket);
             case STUDENT -> BigDecimal.valueOf(50.00 * numberOfTicket);
-            default -> throw new IllegalArgumentException("Unknown ticket type: " + ticketType);
+            default -> throw new NotFoundException("Unknown ticket type: " + ticketType);
         };
     }
 
