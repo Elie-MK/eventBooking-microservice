@@ -15,6 +15,11 @@ import java.util.Map;
 @Configuration
 public class KafkaConsumerConfig {
 
+    /**
+     * Creates a Kafka ConsumerFactory for consuming BookingEvent messages.
+     *
+     * @return A ConsumerFactory configured with Kafka properties and deserializers.
+     */
     @Bean
     public ConsumerFactory<String, BookingEvent> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
@@ -22,9 +27,9 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "notificationId");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 
-        // The VALUE_DESERIALIZER_CLASS_CONFIG is not needed in props anymore
+
         JsonDeserializer<BookingEvent> deserializer = new JsonDeserializer<>(BookingEvent.class);
-        deserializer.addTrustedPackages("*"); // Allow all packages to be deserialized
+        deserializer.addTrustedPackages("*");
 
         return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), deserializer);
     }

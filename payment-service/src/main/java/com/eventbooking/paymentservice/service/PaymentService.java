@@ -20,8 +20,13 @@ import java.util.Optional;
 public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final WebClient.Builder webClientBuilder;
-    private final KafkaTemplate<String, PaymentEvent> kafkaTemplate;
 
+    /**
+     * Retrieves payment details associated with a given booking ID.
+     *
+     * @param bookingId The ID of the booking for which payment details are requested.
+     * @return An Optional containing the PaymentDto if payment exists, or empty if no payment is found.
+     */
     public Optional<PaymentDto> getPaymentByBookingId(Long bookingId) {
         Payment payment = paymentRepository.findByBookingId(bookingId);
         PaymentDto paymentDto = PaymentDto.builder()
@@ -34,6 +39,14 @@ public class PaymentService {
         return Optional.ofNullable(paymentDto);
     }
 
+    /**
+     * Processes the payment for a given booking. It retrieves booking details from the booking service
+     * and creates a Payment entity, marking it as pending.
+     *
+     * @param paymentDto The payment data transfer object containing payment details.
+     * @return The PaymentDto representing the processed payment.
+     * @throws RuntimeException if the associated booking is not found.
+     */
     public PaymentDto processPayment(PaymentDto paymentDto) {
         Long bookingId = paymentDto.getBookingId();
         BookingDto bookingResponse = webClientBuilder.build().get()
@@ -50,25 +63,18 @@ public class PaymentService {
                 .bookingId(paymentDto.getBookingId())
                 .amount(paymentDto.getAmount())
                 .paymentDate(LocalDateTime.now())
-                .paymentStatus(PaymentStatus.PAYMENT_APPROVED)
+                .paymentStatus(PaymentStatus.PENDING)
                 .build();
         Payment savedPayment = paymentRepository.save(payment);
-        PaymentEvent paymentEvent = PaymentEvent.builder()
-                .paymentAmount(paymentDto.getAmount())
-                .numberOfTicket(2)
-                .eventLocation("Tunis")
-                .eventName("UNGA")
-                .userName("John")
-                .eventDate(LocalDate.ofEpochDay(2024 - 10 - 2023)).build();
-
-        sendPaymentEvent(paymentEvent);
         return mapToDto(savedPayment);
     }
 
-    public void sendPaymentEvent(PaymentEvent paymentEvent) {
-        kafkaTemplate.send("notification", paymentEvent);
-    }
-
+    /**
+     * Maps a Payment entity to a PaymentDto.
+     *
+     * @param savedPayment The Payment entity to be converted.
+     * @return The corresponding PaymentDto containing payment details.
+     */
     private PaymentDto mapToDto(Payment savedPayment) {
         return PaymentDto.builder()
                 .id(savedPayment.getId())
