@@ -55,6 +55,8 @@ public class BookingService {
                 .id(value.getId())
                 .eventId(value.getEventId())
                 .userName(value.getUserName())
+                .totalAmount(value.getTotalAmount())
+                .ticketType(value.getTicketType())
                 .numberOfTickets(value.getNumberOfTickets())
                 .isCancelled(value.isCancelled())
                 .bookingTime(value.getBookingTime())
@@ -159,6 +161,15 @@ public class BookingService {
         throw new BookingCancelledException("The booking with id : " + id + " was cancelled");
     }
 
+    public String deleteBooking(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId).orElse(null);
+        if (booking != null) {
+            bookingRepository.deleteById(booking.getId());
+            return "Booking with id " + bookingId + " was deleted";
+        }
+        throw new NotFoundException( "Booking with id " + bookingId + " not found");
+    }
+
     /**
      * Maps a Booking entity to its corresponding BookingDto.
      *
@@ -202,4 +213,6 @@ public class BookingService {
     private void sendNotificationBookingConfirmation(BookingEvent bookingEvent) {
         kafkaTemplate.send("notification", bookingEvent);
     }
+
+
 }

@@ -65,4 +65,11 @@ public class BookingController {
         var result = bookingService.cancelBooking(id);
         return ResponseEntity.ok(result);
     }
+
+    @DeleteMapping("/{bookingId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<String> deleteBooking(@PathVariable Long bookingId){
+        var result = bookingService.deleteBooking(bookingId);
+        return ResponseEntity.ok(result);
+    }
 }
