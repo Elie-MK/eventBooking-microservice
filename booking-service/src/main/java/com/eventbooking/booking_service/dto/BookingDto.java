@@ -1,10 +1,12 @@
 package com.eventbooking.booking_service.dto;
 
+import com.eventbooking.booking_service.constants.TicketType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -27,7 +29,13 @@ public class BookingDto {
     /**
      * Number of tickets booked
      */
-    private int numberOfTickets;
+    private Integer numberOfTickets;
+
+    private BigDecimal totalAmount;
+
+    private TicketType ticketType;
+
+    private boolean isCancelled;
     /**
      * Time when user booked
      */
@@ -35,5 +43,7 @@ public class BookingDto {
     /**
      * State if the user cancelled or not
      */
-    private boolean isCancelled;
+
+
+
 }

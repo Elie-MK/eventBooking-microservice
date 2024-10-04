@@ -8,19 +8,19 @@ spring:
           - id : booking-service
             uri: lb://booking-service
             predicates:
-              - Path=/api/bookings
+              - Path=/api/bookings/**
           - id: event-service
             uri: lb://event-service
             predicates:
-              - Path=/api/events
+              - Path=/api/events/**
           - id: payment-service
             uri: lb://payment-service
             predicates:
-              - Path=/api/payment
+              - Path=/api/payment/**
           - id: discovery-server
             uri: http://localhost:8761
             predicates:
-              - Path=/eureka/web
+              - Path=/eureka/web/**
             filters:
               - setPath=/
           - id: discovery-server-static

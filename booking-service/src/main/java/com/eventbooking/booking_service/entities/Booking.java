@@ -4,6 +4,7 @@ import com.eventbooking.booking_service.constants.TicketType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -16,7 +17,8 @@ import java.time.LocalDateTime;
 public class Booking {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
     @Column(name = "event_id", nullable = false)
@@ -26,9 +28,12 @@ public class Booking {
     private String userName;
 
     @Column(name = "number_of_tickets", nullable = false)
-    private int numberOfTickets;
+    private Integer numberOfTickets;
 
-    @Column(name = "booking-time", nullable = false)
+    @Column(name = "price")
+    private BigDecimal totalAmount;
+
+    @Column(name = "booking_time", nullable = false)
     private LocalDateTime bookingTime;
 
     @Column(name = "ticket_type")
