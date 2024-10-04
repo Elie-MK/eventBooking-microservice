@@ -35,15 +35,13 @@ public class BookingDto {
 
     private TicketType ticketType;
 
+    /**
+     * State if the user cancelled or not
+     */
     private boolean isCancelled;
     /**
      * Time when user booked
      */
     private LocalDateTime bookingTime;
-    /**
-     * State if the user cancelled or not
-     */
-
-
 
 }

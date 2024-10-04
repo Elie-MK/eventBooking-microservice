@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<Object> handleBookingCancelled(NotFoundException ex){
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(
-                new ErrorResponse(HttpStatus.ACCEPTED.value(), ex.getMessage())
+    public ResponseEntity<Object> handleNotFoundException(NotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage())
         );
     }
 

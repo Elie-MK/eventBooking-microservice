@@ -13,6 +13,12 @@ public class GlobalExceptionHandler {
                 new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage())
         );
     }
+    @ExceptionHandler(BookingIsCancelledException.class)
+    public ResponseEntity<Object> handleNotFound(BookingIsCancelledException ex){
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(
+                new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage())
+        );
+    }
 
     public static class ErrorResponse {
         private int status;

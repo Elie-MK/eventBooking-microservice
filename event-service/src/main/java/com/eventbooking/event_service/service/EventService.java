@@ -117,8 +117,13 @@ public class EventService {
      * @return an Optional containing the EventDto if found, or an empty Optional if not found
      */
     public Optional<EventDto> searchEvent(String eventName) {
-        Optional<Event> event = eventRepository.findByNameIgnoreCase(eventName);
-        return event.map(this::mapToDto);
+        String trimmedName = eventName.trim();
+        Optional<Event> event = eventRepository.findByNameIgnoreCase(trimmedName);
+        Optional<EventDto> newEvent = event.map(this::mapToDto);
+        if(newEvent.isEmpty()){
+            throw new NotFoundException("Event with name " + eventName + " not found ");
+        }
+        return newEvent;
     }
 
     private EventDto mapToDto(Event event) {
