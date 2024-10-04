@@ -23,13 +23,13 @@ public class PaymentService {
 
     /**
      * Retrieve a list of all payments.
-     *
+     * <p>
      * This method fetches all the payment records from the database,
      * maps each payment entity to a PaymentDto object, and returns a list of them.
      *
      * @return a List of PaymentDto representing all payments in the system
      */
-    public List<PaymentDto> getAllPayments(){
+    public List<PaymentDto> getAllPayments() {
         List<Payment> payments = paymentRepository.findAll();
         return payments.stream()
                 .map(this::mapToDto)
@@ -43,7 +43,11 @@ public class PaymentService {
      * @return An Optional containing the PaymentDto if payment exists, or empty if no payment is found.
      */
     public List<PaymentDto> getPaymentByBookingId(Long bookingId) {
-       List<Payment> payment = paymentRepository.findByBookingId(bookingId);
+        List<Payment> payment = paymentRepository.findByBookingId(bookingId);
+
+        if (payment.isEmpty()) {
+            throw new NotFoundException("Payment with id " + bookingId + " not found.");
+        }
 
         return payment.stream()
                 .map(this::mapToDto)
@@ -69,8 +73,8 @@ public class PaymentService {
             throw new NotFoundException("Booking not found with id: " + bookingId + " . Cannot process payment");
         }
 
-        if(bookingResponse.isCancelled()){
-            throw  new BookingIsCancelledException("Booking with id " + bookingId + " is cancelled. Cannot process payment." );
+        if (bookingResponse.isCancelled()) {
+            throw new BookingIsCancelledException("Booking with id " + bookingId + " is cancelled. Cannot process payment.");
         }
 
         Payment payment = Payment.builder()
