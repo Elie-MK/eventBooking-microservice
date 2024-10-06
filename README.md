@@ -8,7 +8,7 @@ Ensure the following are installed on your system:
 * Java: Version 22
 * Docker: Latest version
 * Maven: Latest version
-* IDE: IntelliJ IDEA
+* IDEA: IntelliJ IDEA
 
 # How to Start the Application
 Follow these steps to get the application running:
