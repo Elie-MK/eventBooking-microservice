@@ -5,7 +5,7 @@ Each service is independently responsible for its domain, and all services commu
 # Prerequisites
 Ensure the following are installed on your system:
 
-* Java: Version 22
+* Java: Version 17 or latest
 * Docker: Latest version
 * Maven: Latest version
 * IDEA: IntelliJ IDEA
